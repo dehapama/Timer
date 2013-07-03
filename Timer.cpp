@@ -57,7 +57,7 @@ int8_t Timer::after(unsigned long period, void (*callback)())
 	return every(period, callback, 1);
 }
 
-int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount)
+int8_t Timer::oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void))
 {
 	int8_t i = findFreeEventIndex();
 	if (i == NO_TIMER_AVAILABLE) return NO_TIMER_AVAILABLE;
@@ -67,40 +67,32 @@ int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue
 	_events[i].period = period;
 	_events[i].pinState = startingValue;
 	digitalWrite(pin, startingValue);
-	_events[i].repeatCount = repeatCount * 2; // full cycles not transitions
+	_events[i].repeatCount = repeatCount;
+	_events[i].callback = callback;
 	_events[i].lastEventTime = millis();
 	_events[i].count = 0;
 	return i;
 }
 
-int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue)
+int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void))
 {
-	return oscillate(pin, period, startingValue, -1); // forever
+	return oscillateOrPulse(pin, period, startingValue, repeatCount*2, callback); // full cycles not transitions
 }
 
-/**
- * This method will generate a pulse of !startingValue, occuring period after the
- * call of this method and lasting for period. The Pin will be left in !startingValue.
- */
-int8_t Timer::pulse(uint8_t pin, unsigned long period, uint8_t startingValue)
+int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue)
 {
-	return oscillate(pin, period, startingValue, 1); // once
+	return oscillateOrPulse(pin, period, startingValue, -1, 0); // forever
 }
 
 /**
  * This method will generate a pulse of startingValue, starting immediately and of
  * length period. The pin will be left in the !startingValue state
  */
-int8_t Timer::pulseImmediate(uint8_t pin, unsigned long period, uint8_t pulseValue)
-{
-	int8_t id(oscillate(pin, period, pulseValue, 1));
-	// now fix the repeat count
-	if (id >= 0 && id < MAX_NUMBER_OF_EVENTS) {
-		_events[id].repeatCount = 1;
-	}
-	return id;
-}
+int8_t Timer::pulse(uint8_t pin, unsigned long period, uint8_t startingValue, void (*callback)(void))
 
+{
+	return oscillateOrPulse(pin, period, startingValue, 1, callback); // once
+}
 
 void Timer::stop(int8_t id)
 {
