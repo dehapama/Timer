@@ -57,7 +57,7 @@ int8_t Timer::after(unsigned long period, void (*callback)())
 	return every(period, callback, 1);
 }
 
-int8_t Timer::oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount)
+int8_t Timer::oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void))
 {
 	int8_t i = findFreeEventIndex();
 	if (i == -1) return -1;
@@ -68,24 +68,25 @@ int8_t Timer::oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t starti
 	_events[i].pinState = startingValue;
 	digitalWrite(pin, startingValue);
 	_events[i].repeatCount = repeatCount;
+	_events[i].callback = callback;
 	_events[i].lastEventTime = millis();
 	_events[i].count = 0;
 	return i;
 }
 
-int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount)
+int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void))
 {
-	return oscillateOrPulse(pin, period, startingValue, repeatCount*2); // full cycles not transitions
+	return oscillateOrPulse(pin, period, startingValue, repeatCount*2, callback); // full cycles not transitions
 }
 
 int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue)
 {
-	return oscillateOrPulse(pin, period, startingValue, -1); // forever
+	return oscillateOrPulse(pin, period, startingValue, -1, 0); // forever
 }
 
-int8_t Timer::pulse(uint8_t pin, unsigned long period, uint8_t startingValue)
+int8_t Timer::pulse(uint8_t pin, unsigned long period, uint8_t startingValue, void (*callback)(void))
 {
-	return oscillateOrPulse(pin, period, startingValue, 1); // once
+	return oscillateOrPulse(pin, period, startingValue, 1, callback); // once
 }
 
 void Timer::stop(int8_t id)
