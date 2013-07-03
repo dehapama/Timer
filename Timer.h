@@ -45,6 +45,7 @@ public:
 
 protected:
   Event _events[MAX_NUMBER_OF_EVENTS];
+  int8_t oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount);
   int8_t findFreeEventIndex(void);
 
 };
