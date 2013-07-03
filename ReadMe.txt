@@ -20,3 +20,12 @@ Updated keywords.txt file to include all functions.
  o Added several comments
  o Added Timer::pulseImmediate(). pulseImmediate sets the pin to the specified value for the given
    duration. After the duration, the pin is set to !value.
+
+1.3 by Martin Pahl
+ o Removed Timer::pulseImmediate() and 
+ o Fixed Timer::pulse(). A pulse should be send immediately, not after a
+   delay. So I think, it's a bug in the original pulse function and there is
+   no need for another pulse function.
+ o Added optional callback functionality to Timer::oscillate (the version with limited
+   repeatition) and Timer::pulse(). The callback function is called at the end
+   of the pulse or oscillation.
