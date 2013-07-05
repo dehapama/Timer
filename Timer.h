@@ -26,7 +26,9 @@
 #include <inttypes.h>
 #include "Event.h"
 
+#ifndef MAX_NUMBER_OF_EVENTS
 #define MAX_NUMBER_OF_EVENTS (10)
+#endif
 
 #define TIMER_NOT_AN_EVENT (-2)
 #define NO_TIMER_AVAILABLE (-1)
