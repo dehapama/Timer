@@ -76,7 +76,7 @@ int8_t Timer::oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t starti
 
 int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void))
 {
-	return oscillateOrPulse(pin, period, startingValue, repeatCount*2, callback); // full cycles not transitions
+	return oscillateOrPulse(pin, period, startingValue, repeatCount*2-1, callback); // full cycles not transitions
 }
 
 int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue)
