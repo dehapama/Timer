@@ -55,7 +55,12 @@ void Event::update(void)
 	}
 	if (repeatCount > -1 && count >= repeatCount)
 	{
-	  	if ((eventType==EVENT_OSCILLATE) && (callback)) (*callback)();
-		eventType = EVENT_NONE;
+	  stop();
 	}
+}
+
+void Event::stop(void)
+{
+  if ((eventType==EVENT_OSCILLATE) && (callback)) (*callback)();
+  eventType = EVENT_NONE;
 }

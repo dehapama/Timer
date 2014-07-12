@@ -35,6 +35,7 @@ class Event
 public:
   Event(void);
   void update(void);
+  void stop(void);
   int8_t eventType;
   unsigned long period;
   int repeatCount;

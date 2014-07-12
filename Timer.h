@@ -27,7 +27,7 @@
 #include "Event.h"
 
 #ifndef MAX_NUMBER_OF_EVENTS
-#define MAX_NUMBER_OF_EVENTS (10)
+#define MAX_NUMBER_OF_EVENTS (20)
 #endif
 
 #define TIMER_NOT_AN_EVENT (-2)
@@ -50,14 +50,15 @@ public:
    */
   int8_t pulse(uint8_t pin, unsigned long period, uint8_t startingValue, void (*callback)(void) = 0);
 
-  void stop(int8_t id);
+  void stop(int8_t& id);
   void update(void);
+
+  int8_t countUsedEvents(void);
 
 protected:
   Event _events[MAX_NUMBER_OF_EVENTS];
   int8_t oscillateOrPulse(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount, void (*callback)(void));
   int8_t findFreeEventIndex(void);
-
 };
 
 #endif
