@@ -61,6 +61,9 @@ void Event::update(void)
 
 void Event::stop(void)
 {
-  if ((eventType==EVENT_OSCILLATE) && (callback)) (*callback)();
+  if (eventType==EVENT_OSCILLATE) {
+    if (!(count & 0x1) ) digitalWrite(pin, !pinState);
+    if  (callback) (*callback)();
+  }
   eventType = EVENT_NONE;
 }
